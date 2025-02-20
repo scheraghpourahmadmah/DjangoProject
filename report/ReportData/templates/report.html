@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Daily Report</title>
+</head>
+<body>
+    <h1>Daily Report</h1>
+    {% for report in reports %}
+        <p><strong>Report No:</strong> {{ report.daily_report_no }}</p>
+        <p><strong>Date:</strong> {{ report.date }}</p>
+        <p><strong>Page:</strong> {{ report.page }}</p>
+        <h3>Pictures:</h3>
+        <ul>
+            {% for picture in report.pictures.all %}
+                <li>
+                    <strong>File Name:</strong> {{ picture.file_name }}<br>
+                    <strong>Location:</strong> {{ picture.location }}<br>
+                    <strong>Description:</strong> {{ picture.description }}
+                </li>
+            {% endfor %}
+        </ul>
+        <hr>
+    {% endfor %}
+</body>
+</html>
