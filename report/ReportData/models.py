@@ -2,7 +2,7 @@ from django.db import models
 
 class Report(models.Model):
     date = models.DateField()
-    daily_report_no = models.CharField(max_length=50, default="000")  # Add default value
+    daily_report_no = models.CharField(max_length=50, default="000")
     page = models.CharField(max_length=20)
 
     def __str__(self):

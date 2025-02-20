@@ -9,14 +9,12 @@ class Command(BaseCommand):
         with open("data/input.json", "r") as file:
             data = json.load(file)
 
-            # Create the Report entry
             report = Report.objects.create(
                 date=data["date"],
                 daily_report_no=data["daily_report_no"],
                 page=data["page"]
             )
 
-            # Create Picture entries
             for pic in data["pictures"]:
                 Picture.objects.create(
                     report=report,
