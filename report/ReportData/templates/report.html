@@ -17,6 +17,11 @@
             <span><strong>PHOTOS</strong></span>
             <span></span>
         </div>
+
+        <div class="d-flex justify-content-end">
+            <button id="generatePdf" class="btn btn-primary mb-2">Download Report as PDF</button>
+        </div>
+
         <table class="table">
             <tr>
                 <td colspan="3" class="logo">ENTECH</td>
@@ -45,7 +50,48 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="/static/js/site.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.getJSON("/reportapi/", function (data) {
+                $("#date").text(data.date);
+                $("#report_no").text(data.daily_report_no);
+                $("#page").text(data.page);
+
+
+                data.pictures.forEach(pic => {
+                    $('#picture_info').append(`
+                        <div class="photo-container">
+                            <img src="/static/images/${pic.file_name}" alt="${pic.description}" style="width: 280px;">
+                        </div>
+                        <table class="table">
+                            <tr>
+                                <td><b>Location:</b> ${pic.location}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Description:</b> ${pic.description}</td>
+                            </tr>
+                        </table>
+                    `);
+                });
+            });
+
+            $("#generatePdf").click(function () {
+                const { jsPDF } = window.jspdf;
+                let pdf = new jsPDF("p", "mm", "a4");
+
+                html2canvas(document.body).then(canvas => {
+                    let imgData = canvas.toDataURL("image/png");
+                    let imgWidth = 210;
+                    let imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                    pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+                    pdf.save("Daily_Inspection_Report.pdf");
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
